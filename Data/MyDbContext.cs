@@ -9,5 +9,6 @@ namespace MyAspNetCoreApp.Data
 
         // 定义你的 DbSet（表示数据库表）
         public DbSet<WeatherForecast> WeatherForecasts { get; set; }
+        public DbSet<Contact> Contacts { get; set; }
     }
 }
