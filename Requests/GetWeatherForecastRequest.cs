@@ -1,4 +1,5 @@
 using MediatR;
+using MyAspNetCoreApp.Models;
 
 // 请求类，返回一个 WeatherForecast 数组
 public class GetWeatherForecastRequest : IRequest<WeatherForecast[]>
