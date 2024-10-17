@@ -46,11 +46,15 @@ namespace MyAspNetCoreApp.Models
         // New field: indicates whether the user is from an old system
         public bool IsOldAppUser { get; set; } = false;  // Default value is false
     }
-}```
+}
+
+```
 
 
-### Step 2: Create Migration
+###  Step 2: Create Migration
+
 Run the following command in the terminal to generate a migration file that adds the IsOldAppUser field to the User table.
+
 ```
 dotnet ef migrations add AddIsOldAppUserToUser
 
