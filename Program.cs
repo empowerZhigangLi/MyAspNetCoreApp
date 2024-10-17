@@ -19,6 +19,8 @@ builder.Services.AddControllers();
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
 
+// 添加健康检查服务
+builder.Services.AddHealthChecks();
 // 注册 Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -36,6 +38,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();  // 强制 HTTPS 重定向
 app.UseAuthorization();     // 启用授权中间件
 
+// 映射健康检查路由
+app.MapHealthChecks("/health"); // 通过访问 /health 检查健康状态
 // 映射控制器路由
 app.MapControllers();
 
