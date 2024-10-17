@@ -12,6 +12,17 @@ namespace MyAspNetCoreApp.Data
         public DbSet<WeatherForecast> WeatherForecasts { get; set; }
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<AndroidSms> AndroidSms { get; set; }  
+        public DbSet<User> Users { get; set; }
+        
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // 为 User 实体中的 PhoneNumber 设置唯一约束
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.PhoneNumber)
+                .IsUnique();  // PhoneNumber 必须唯一且不能为 null
+        }
     }
     // 通用仓储实现类，自动使用 EF Core 进行数据库操作
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
