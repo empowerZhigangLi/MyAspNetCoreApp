@@ -20,4 +20,11 @@ public class AndroidSmsController : ControllerBase
         var androidSms = await _mediator.Send(request);
         return Ok(androidSms);
     }
+    
+    [HttpPost("search")]
+    public async Task<IActionResult> SearchSms([FromBody] SearchAndroidSmsRequest request)
+    {
+        var response = await _mediator.Send(request);
+        return Ok(response);
+    }
 }

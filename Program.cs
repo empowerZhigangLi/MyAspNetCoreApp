@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using MediatR;
 using MyAspNetCoreApp.Data; // 引入数据库上下文所在的命名空间
 using System.Reflection;
+using MyAspNetCoreApp.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,9 @@ builder.Services.AddDbContext<MyDbContext>(options =>
 // 注册控制器服务
 builder.Services.AddControllers();
 
+// 注册 IRepository
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
 // 注册 MediatR，并扫描当前程序集中的所有 Handler
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
@@ -24,6 +28,15 @@ builder.Services.AddHealthChecks();
 // 注册 Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddControllers(options =>
+{
+    // 配置模型绑定行为，避免空字符串触发验证错误
+}).ConfigureApiBehaviorOptions(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
+
 
 var app = builder.Build();
 
