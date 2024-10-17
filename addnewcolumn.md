@@ -113,4 +113,4 @@ By following these steps, you can add a new IsOldAppUser field to an existing da
 2. Create and apply a migration to synchronize the changes to the database.
 3. If you have any other questions or need further assistance, feel free to ask!
 
-![img.png](img.png)
+![img.png](addnewcolumn.png)
