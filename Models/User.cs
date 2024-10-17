@@ -37,5 +37,8 @@ namespace MyAspNetCoreApp.Models
 
         // 标志用户是否被锁定
         public bool IsLocked { get; set; } = false;
+        
+        // 新增字段：标志是否是旧系统用户
+        public bool IsOldAppUser { get; set; } = false;  // 默认值为 false
     }
 }
