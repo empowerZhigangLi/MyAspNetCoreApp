@@ -1,11 +1,15 @@
 using MediatR;
-using MyAspNetCoreApp.Data;
 using MyAspNetCoreApp.Models;
 using MyAspNetCoreApp.Requests;
+using MyAspNetCoreApp.Data;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MyAspNetCoreApp.Handlers
 {
-    public class InsertContactHandler : IRequestHandler<InsertContactRequest, Contact>
+    public class InsertContactHandler : IRequestHandler<InsertContactRequest, List<Contact>>
     {
         private readonly MyDbContext _dbContext;
 
@@ -14,20 +18,22 @@ namespace MyAspNetCoreApp.Handlers
             _dbContext = dbContext;
         }
 
-        public async Task<Contact> Handle(InsertContactRequest request, CancellationToken cancellationToken)
+        public async Task<List<Contact>> Handle(InsertContactRequest request, CancellationToken cancellationToken)
         {
-            var contact = new Contact
+            // 将请求中的 ContactItem 转换为 Contact 实体
+            var contacts = request.Contacts.Select(contactItem => new Contact
             {
-                DeviceContactId = request.DeviceContactId,
-                Name = request.Name,
-                PhoneNumber = request.PhoneNumber,
-                ContactLastUpdated = request.ContactLastUpdated
-            };
+                DeviceContactId = contactItem.DeviceContactId,
+                Name = contactItem.Name,
+                PhoneNumber = contactItem.PhoneNumber,
+                ContactLastUpdated = contactItem.ContactLastUpdated
+            }).ToList();
 
-            _dbContext.Contacts.Add(contact);
+            // 批量插入联系人数据
+            _dbContext.Contacts.AddRange(contacts);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return contact;
+            return contacts;
         }
     }
 }

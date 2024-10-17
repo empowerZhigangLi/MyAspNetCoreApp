@@ -21,39 +21,36 @@ namespace MyAspNetCoreApp.Handlers
 
         public async Task<SearchAndroidSmsResponse> Handle(SearchAndroidSmsRequest request, CancellationToken cancellationToken)
         {
-            var smsQuery = _repository.GetQueryable();  // 获取 IQueryable 对象
+            // 获取 IQueryable 对象
+            var smsQuery = _repository.GetQueryable();  
 
-            // 如果 Filter 为空或没有任何条件，直接返回所有数据
-            if (request.Filter != null)
+            // 根据 Address 进行过滤
+            if (!string.IsNullOrEmpty(request.Address))
             {
-                // 根据 Address 进行过滤
-                if (!string.IsNullOrEmpty(request.Filter.Address))
-                {
-                    smsQuery = smsQuery.Where(sms => sms.Address.Contains(request.Filter.Address));
-                }
+                smsQuery = smsQuery.Where(sms => sms.Address.Contains(request.Address));
+            }
 
-                // 根据 Body 进行过滤
-                if (!string.IsNullOrEmpty(request.Filter.Body))
-                {
-                    smsQuery = smsQuery.Where(sms => sms.Body.Contains(request.Filter.Body));
-                }
+            // 根据 Body 进行过滤
+            if (!string.IsNullOrEmpty(request.Body))
+            {
+                smsQuery = smsQuery.Where(sms => sms.Body.Contains(request.Body));
+            }
 
-                // 根据 Status 进行过滤
-                if (!string.IsNullOrEmpty(request.Filter.Status))
-                {
-                    smsQuery = smsQuery.Where(sms => sms.Status == request.Filter.Status);
-                }
+            // 根据 Status 进行过滤
+            if (!string.IsNullOrEmpty(request.Status))
+            {
+                smsQuery = smsQuery.Where(sms => sms.Status == request.Status);
+            }
 
-                // 根据日期范围进行过滤
-                if (request.Filter.FromDate.HasValue)
-                {
-                    smsQuery = smsQuery.Where(sms => sms.Date >= request.Filter.FromDate.Value);
-                }
+            // 根据日期范围进行过滤
+            if (request.FromDate.HasValue)
+            {
+                smsQuery = smsQuery.Where(sms => sms.Date >= request.FromDate.Value);
+            }
 
-                if (request.Filter.ToDate.HasValue)
-                {
-                    smsQuery = smsQuery.Where(sms => sms.Date <= request.Filter.ToDate.Value);
-                }
+            if (request.ToDate.HasValue)
+            {
+                smsQuery = smsQuery.Where(sms => sms.Date <= request.ToDate.Value);
             }
 
             // 执行查询并转换为 AndroidSmsLite

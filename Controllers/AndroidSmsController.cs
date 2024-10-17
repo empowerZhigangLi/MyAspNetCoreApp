@@ -14,11 +14,12 @@ public class AndroidSmsController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpPost]
-    public async Task<IActionResult> AddAndroidSms([FromBody] InsertAndroidSmsRequest request)
+    // 批量插入 AndroidSms 数据
+    [HttpPost("insert")]
+    public async Task<IActionResult> InsertAndroidSms([FromBody] InsertAndroidSmsRequest request)
     {
-        var androidSms = await _mediator.Send(request);
-        return Ok(androidSms);
+        var smsList = await _mediator.Send(request);
+        return Ok(smsList);
     }
     
     [HttpPost("search")]

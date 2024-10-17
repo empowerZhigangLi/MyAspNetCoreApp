@@ -13,11 +13,12 @@ public class ContactController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpPost]
-    public async Task<IActionResult> AddContact([FromBody] InsertContactRequest request)
+    // 批量插入联系人
+    [HttpPost("insert")]
+    public async Task<IActionResult> InsertContacts([FromBody] InsertContactRequest request)
     {
-        var contact = await _mediator.Send(request);
-        return Ok(contact);
+        var contacts = await _mediator.Send(request);
+        return Ok(contacts);
     }
     
     // HTTP POST 请求，传入可选的查询参数

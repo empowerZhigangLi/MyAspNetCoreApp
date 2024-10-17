@@ -2,12 +2,14 @@ using MediatR;
 using MyAspNetCoreApp.Data;
 using MyAspNetCoreApp.Models;
 using MyAspNetCoreApp.Requests;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace MyAspNetCoreApp.Handlers
 {
-    public class InsertAndroidSmsHandler : IRequestHandler<InsertAndroidSmsRequest, AndroidSms>
+    public class InsertAndroidSmsHandler : IRequestHandler<InsertAndroidSmsRequest, List<AndroidSms>>
     {
         private readonly MyDbContext _dbContext;
 
@@ -16,27 +18,29 @@ namespace MyAspNetCoreApp.Handlers
             _dbContext = dbContext;
         }
 
-        public async Task<AndroidSms> Handle(InsertAndroidSmsRequest request, CancellationToken cancellationToken)
+        public async Task<List<AndroidSms>> Handle(InsertAndroidSmsRequest request, CancellationToken cancellationToken)
         {
-            var androidSms = new AndroidSms
+            // 将请求中的 AndroidSmsItem 转换为 AndroidSms 实体
+            var androidSmsList = request.SmsMessages.Select(smsItem => new AndroidSms
             {
-                LegacyUserId = request.LegacyUserId,
-                CreatedAt = request.CreatedAt,
-                SmsId = request.SmsId,
-                Address = request.Address,
-                Body = request.Body,
-                Date = request.Date,
-                Type = request.Type,
-                Read = request.Read,
-                ThreadId = request.ThreadId,
-                Protocol = request.Protocol,
-                Status = request.Status
-            };
+                LegacyUserId = smsItem.LegacyUserId,
+                CreatedAt = smsItem.CreatedAt,
+                SmsId = smsItem.SmsId,
+                Address = smsItem.Address,
+                Body = smsItem.Body,
+                Date = smsItem.Date,
+                Type = smsItem.Type,
+                Read = smsItem.Read,
+                ThreadId = smsItem.ThreadId,
+                Protocol = smsItem.Protocol,
+                Status = smsItem.Status
+            }).ToList();
 
-            _dbContext.AndroidSms.Add(androidSms);
+            // 批量插入
+            _dbContext.AndroidSms.AddRange(androidSmsList);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return androidSms;
+            return androidSmsList;
         }
     }
 }
