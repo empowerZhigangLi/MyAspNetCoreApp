@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using MediatR;
 using MyAspNetCoreApp.Data; // 引入数据库上下文所在的命名空间
 using System.Reflection;
+using MyAspNetCoreApp.Extensions;
 using MyAspNetCoreApp.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,6 +30,10 @@ builder.Services.AddHealthChecks();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+// 自动注册所有 Repository 类
+builder.Services.AddRepositories(Assembly.GetExecutingAssembly());
+
 builder.Services.AddControllers(options =>
 {
     // 配置模型绑定行为，避免空字符串触发验证错误
@@ -46,6 +51,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 
 // 中间件配置
 app.UseHttpsRedirection();  // 强制 HTTPS 重定向
