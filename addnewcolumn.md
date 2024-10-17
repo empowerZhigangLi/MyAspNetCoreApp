@@ -51,7 +51,9 @@ namespace MyAspNetCoreApp.Models
 
 ### 步骤 2：创建迁移
 在终端中运行以下命令，生成迁移文件，它将为 User 表添加 IsOldAppUser 字段。
-```dotnet ef migrations add AddIsOldAppUserToUser
+```
+dotnet ef migrations add AddIsOldAppUserToUser
+
 ```
 这会生成一个包含新字段的迁移文件。
 
@@ -92,3 +94,21 @@ namespace MyAspNetCoreApp.Models
 
 
 
+### 步骤 4：应用迁移
+应用迁移并更新数据库：
+```
+dotnet ef database update
+
+```
+这会将 IsOldAppUser 字段添加到 Users 表中，并为所有现有记录设置默认值 false。
+
+### 步骤 5：检查数据库
+迁移完成后，使用数据库管理工具（如 SQL Server Management Studio、pgAdmin 或 DBeaver）来检查 Users 表，确保 IsOldAppUser 字段已成功添加，并且现有记录的默认值为 false。
+
+### 总结
+
+通过以上步骤，你可以在已经存在的数据表中添加一个新的字段 IsOldAppUser，并为所有现有数据设置默认值。你只需要：
+
+修改实体类以添加新字段。
+创建并应用迁移，将更改同步到数据库。
+如果有其他问题或需要进一步的帮助，欢迎继续讨论！
